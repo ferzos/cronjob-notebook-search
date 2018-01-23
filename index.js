@@ -13,7 +13,6 @@ function createListOfNotebook() {
   axios.get(enterKomputerApi)
   .then(function(response) {
     const data = response.data;
-    let notebookObj = new Object();
     
     data.map(notebook => {
       if (notebook.subcategory_description != 'Notebook LED Panel' &&
@@ -26,6 +25,8 @@ function createListOfNotebook() {
           notebook.subcategory_description != 'Notebook Cooler' &&
           notebook.subcategory_description != 'Apple Cable / Connector' &&
           notebook.subcategory_description != '') {
+
+            let notebookObj = new Object();
             
             notebookObj.name = cleanName(notebook.name);
             
@@ -135,6 +136,8 @@ function parsingStorage(data) {
       storage = '512';
     } else if (storage.match(/1TB/gi)) {
       storage = '1000';
+    } else if (storage.match(/2TB/gi)) {
+      storage = '2000';
     }
   }
 
