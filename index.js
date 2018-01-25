@@ -33,7 +33,7 @@ function createListOfNotebook() {
 
             notebookObj.brand = notebook.brand_description
 
-            notebookObj.price = notebook.price;
+            notebookObj.price = parseInt(notebook.price);
             
             arrayNotebook.push(notebookObj);
       }
