@@ -24,7 +24,10 @@ function createListOfNotebook() {
           notebook.subcategory_description != 'Security Cable Lock' &&
           notebook.subcategory_description != 'Notebook Adaptor' &&
           notebook.subcategory_description != 'Notebook Cooler' &&
-          notebook.subcategory_description != 'Apple Cable / Connector') {
+          notebook.subcategory_description != 'Apple Cable / Connector' &&
+          parseInt(notebook.price) > 2000000 &&
+          notebook.details != ' ' &&
+          notebook.details != '') {
 
             let notebookObj = new Object();
             
