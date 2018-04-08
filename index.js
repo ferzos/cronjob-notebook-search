@@ -9,6 +9,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 function createListOfNotebook() {
   const enterKomputerApi = 'https://enterkomputer.com/api/product/notebook.json';
   const arrayNotebook = new Array();
+  const printedNotebook = new Array();
   
   axios.get(enterKomputerApi)
   .then(function(response) {
@@ -37,9 +38,26 @@ function createListOfNotebook() {
             
             arrayNotebook.push(notebookObj);
       }
+      printedNotebook.push(notebook);
     });
+    // insertToDB(arrayNotebook);
+    printNotebook(printedNotebook);
+  });
+}
 
-    insertToDB(arrayNotebook);
+function printNotebook(printedNotebook) {
+  let output = '';
+  printedNotebook.map(notebook => {
+    if (notebook.price > 2000000)
+    output += `${notebook.name}\n`;
+  })
+  
+  fs.writeFile('out.txt', output, (err) => {  
+    // throws an error, you could also catch it here
+    if (err) throw err;
+  
+   // success case, the file was saved
+    console.log('Done!');
   });
 }
 
