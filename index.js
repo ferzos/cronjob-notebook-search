@@ -68,15 +68,66 @@ function notebookDetailsParse(details) {
     detail.processor = parsingProcessor(arrData[0]);
     detail.ram = parsingRam(arrData[1]);
     detail.storage = parsingStorage(arrData[2]);
+    detail.vga = parsingVGA(details);
+    detail.ssd = details.toLowerCase().match(/ssd/g) ? true : false;
   }
   // String bagus
   else {
     detail.processor = parsingProcessor(notebookDetails[0]);
     detail.ram = parsingRam(notebookDetails[1]);
     detail.storage = parsingStorage(notebookDetails[2]);
+    detail.vga = parsingVGA(details);
+    detail.ssd = details.toLowerCase().match(/ssd/g);
+    detail.ssd = details.toLowerCase().match(/ssd/g) ? true : false;
   }
   
   return detail;
+}
+
+function parsingVGA(oldDetails) {
+  const details = oldDetails.toLowerCase();
+  let vga = '';
+
+  // Kalo ada word 'VGA'
+  if (details.match(/vga/g)) {
+    vga = details.split('vga')[1].split(',')[0]
+  } else {
+    vga = details
+  }
+
+  // Kalo ada word 'Radeon'
+  if (vga.match(/radeon/g)) {
+    // R5, R6, R7, R8, 
+    if (vga.match(/r5/g)){
+      vga = 'Radeon R5'
+    } else if (vga.match(/r6/g)){
+      vga = 'Radeon R6'
+    } else if (vga.match(/r7/g)){
+      vga = 'Radeon R7'
+    } else if (vga.match(/r8/g)){
+      vga = 'Radeon R8'
+    } else {
+      vga = 'Radeon'
+    }
+  }
+
+  // Kalo ada word 'Nvidia'
+  if (vga.match(/nvidia/g)) {
+    // GT, GTX
+    if (vga.match(/gtx/g)){
+      vga = 'GTX'
+    } else if (vga.match(/gt/g)){
+      vga = 'GT'
+    } else {
+      vga = 'Nvidia'
+    } 
+  }
+
+  if (vga.match(/intel/g)) {
+    vga = 'Intel HD'
+  }
+
+  return vga;
 }
 
 function parsingProcessor(data) {
