@@ -91,8 +91,6 @@ function parsingVGA(oldDetails) {
   // Kalo ada word 'VGA'
   if (details.match(/vga/g)) {
     vga = details.split('vga')[1].split(',')[0]
-  } else {
-    vga = details
   }
 
   // Kalo ada word 'Radeon'
@@ -106,8 +104,6 @@ function parsingVGA(oldDetails) {
       vga = 'Radeon R7'
     } else if (vga.match(/r8/g)){
       vga = 'Radeon R8'
-    } else {
-      vga = 'Radeon'
     }
   }
 
@@ -118,13 +114,7 @@ function parsingVGA(oldDetails) {
       vga = 'GTX'
     } else if (vga.match(/gt/g)){
       vga = 'GT'
-    } else {
-      vga = 'Nvidia'
     } 
-  }
-
-  if (vga.match(/intel/g)) {
-    vga = 'Intel HD'
   }
 
   return vga;
@@ -183,9 +173,7 @@ function parsingStorage(data) {
 
     if (storage.match(/256GB/gi)) {
       storage = '256';
-    } else if (storage.match(/500GB/gi)) {
-      storage = '500';
-    } else if (storage.match(/512GB/gi)) {
+    } else if (storage.match(/512GB/gi) || storage.match(/500GB/gi)) {
       storage = '512';
     } else if (storage.match(/1TB/gi)) {
       storage = '1000';
