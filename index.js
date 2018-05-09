@@ -86,12 +86,12 @@ function notebookDetailsParse(details) {
 
 function parsingVGA(oldDetails) {
   const details = oldDetails.toLowerCase();
-  let vga = '';
+  let vga = details;
 
   // Kalo ada word 'VGA'
-  if (details.match(/vga/g)) {
-    vga = details.split('vga')[1].split(',')[0]
-  }
+  // if (details.match(/vga/g)) {
+  //   vga = details.split('vga')[1].split(',')[0]
+  // }
 
   // Kalo ada word 'Radeon'
   if (vga.match(/radeon/g)) {
@@ -104,17 +104,24 @@ function parsingVGA(oldDetails) {
       vga = 'Radeon R7'
     } else if (vga.match(/r8/g)){
       vga = 'Radeon R8'
+    } else {
+      vga = ''
     }
   }
-
   // Kalo ada word 'Nvidia'
-  if (vga.match(/nvidia/g)) {
+  else if (vga.match(/nvidia/g)) {
     // GT, GTX
     if (vga.match(/gtx/g)){
       vga = 'GTX'
     } else if (vga.match(/gt/g)){
       vga = 'GT'
+    } else {
+      vga = ''
     } 
+  }
+  // Kalo ga ada yang cocok
+  else {
+    vga = ''
   }
 
   return vga;
