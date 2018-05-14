@@ -93,8 +93,8 @@ function parsingVGA(oldDetails) {
   //   vga = details.split('vga')[1].split(',')[0]
   // }
 
-  // Kalo ada word 'AMD'
-  if (details.match(/amd/g)) {
+  // Kalo ada word 'Radeon'
+  if (details.match(/radeon/g)) {
     vga.brand = 'amd'
     // R5, R6, R7, R8, 
     if (details.match(/r5/g)){
@@ -105,8 +105,6 @@ function parsingVGA(oldDetails) {
       vga.version = 'r7'
     } else if (details.match(/r8/g)){
       vga.version = 'r8'
-    } else {
-      vga.version = ''
     }
   }
   // Kalo ada word 'Nvidia'
@@ -117,8 +115,6 @@ function parsingVGA(oldDetails) {
       vga.version = 'gtx'
     } else if (details.match(/gt/g)){
       vga.version = 'gt'
-    } else {
-      vga.version = ''
     } 
   }
 
