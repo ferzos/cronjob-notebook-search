@@ -1,4 +1,4 @@
-const env = require('dotenv').config()
+const env = require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 
@@ -86,42 +86,40 @@ function notebookDetailsParse(details) {
 
 function parsingVGA(oldDetails) {
   const details = oldDetails.toLowerCase();
-  let vga = details;
+  let vga = new Object();
 
   // Kalo ada word 'VGA'
   // if (details.match(/vga/g)) {
   //   vga = details.split('vga')[1].split(',')[0]
   // }
 
-  // Kalo ada word 'Radeon'
-  if (vga.match(/radeon/g)) {
+  // Kalo ada word 'AMD'
+  if (details.match(/amd/g)) {
+    vga.brand = 'amd'
     // R5, R6, R7, R8, 
-    if (vga.match(/r5/g)){
-      vga = 'Radeon R5'
-    } else if (vga.match(/r6/g)){
-      vga = 'Radeon R6'
-    } else if (vga.match(/r7/g)){
-      vga = 'Radeon R7'
-    } else if (vga.match(/r8/g)){
-      vga = 'Radeon R8'
+    if (details.match(/r5/g)){
+      vga.version = 'r5'
+    } else if (details.match(/r6/g)){
+      vga.version = 'r6'
+    } else if (details.match(/r7/g)){
+      vga.version = 'r7'
+    } else if (details.match(/r8/g)){
+      vga.version = 'r8'
     } else {
-      vga = ''
+      vga.version = ''
     }
   }
   // Kalo ada word 'Nvidia'
-  else if (vga.match(/nvidia/g)) {
+  else if (details.match(/nvidia/g)) {
+    vga.brand = 'nvidia'
     // GT, GTX
-    if (vga.match(/gtx/g)){
-      vga = 'GTX'
-    } else if (vga.match(/gt/g)){
-      vga = 'GT'
+    if (details.match(/gtx/g)){
+      vga.version = 'gtx'
+    } else if (details.match(/gt/g)){
+      vga.version = 'gt'
     } else {
-      vga = ''
+      vga.version = ''
     } 
-  }
-  // Kalo ga ada yang cocok
-  else {
-    vga = ''
   }
 
   return vga;
@@ -129,6 +127,7 @@ function parsingVGA(oldDetails) {
 
 function parsingProcessor(data) {
   let processor = '';
+  
   // PARSING PROCESSOR
   if (data) {
     processor = data.trim();
@@ -136,17 +135,17 @@ function parsingProcessor(data) {
     // Parsing buat intel
     if (processor.match(/intel/gi)) {
       if (processor.match(/i3/gi)) {
-        processor = 'Intel i3';
+        processor = 'i3';
       } else if (processor.match(/i5/gi)){
-        processor = 'Intel i5';
+        processor = 'i5';
       } else if (processor.match(/i7/gi)){
-        processor = 'Intel i7';
+        processor = 'i7';
       }
     }
 
     // Parsing buat amd
     if (processor.match(/amd/gi)) {
-      processor = 'AMD';
+      processor = 'amd';
     }
   }
 
@@ -155,6 +154,7 @@ function parsingProcessor(data) {
 
 function parsingRam(data) {
   let ram = '';
+  
   if (data) {
     ram = data.trim();
 
