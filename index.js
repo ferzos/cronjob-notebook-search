@@ -1,25 +1,23 @@
-const env = require('dotenv').config();
+require('dotenv').config();
 const axios = require('axios');
-const fs = require('fs');
 
-const prefix = 'https://api.mlab.com/api/1';
 const API_KEY = process.env.API_KEY;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 function createListOfNotebook() {
   const enterKomputerApi = 'https://enterkomputer.com/api/product/notebook.json';
   const arrayNotebook = new Array();
-  
+
   axios.get(enterKomputerApi)
-  .then(function(response) {
-    const data = response.data;
-    
-    data.map(notebook => {
-      if (notebook.subcategory_description != 'Notebook LED Panel' &&
+    .then(function (response) {
+      const data = response.data;
+
+      data.map(notebook => {
+        if (notebook.subcategory_description != 'Notebook LED Panel' &&
           notebook.subcategory_description != 'Notebook Keyboard' &&
           notebook.subcategory_description != 'Notebook Bag' &&
           notebook.subcategory_description != 'Notebook Accessories' &&
-          notebook.subcategory_description != 'Notebook Battery' && 
+          notebook.subcategory_description != 'Notebook Battery' &&
           notebook.subcategory_description != 'Security Cable Lock' &&
           notebook.subcategory_description != 'Notebook Adaptor' &&
           notebook.subcategory_description != 'Notebook Cooler' &&
@@ -28,22 +26,22 @@ function createListOfNotebook() {
           notebook.details != ' ' &&
           notebook.details != '') {
 
-            let notebookObj = new Object();
-            
-            notebookObj.name = cleanName(notebook.name);
-            
-            notebookObj.details = notebookDetailsParse(notebook.details);
+          let notebookObj = new Object();
 
-            notebookObj.brand = notebook.brand_description
+          notebookObj.name = cleanName(notebook.name);
 
-            notebookObj.price = parseInt(notebook.price);
-            
-            arrayNotebook.push(notebookObj);
-      }
+          notebookObj.details = notebookDetailsParse(notebook.details);
+
+          notebookObj.brand = notebook.brand_description
+
+          notebookObj.price = parseInt(notebook.price);
+
+          arrayNotebook.push(notebookObj);
+        }
+      });
+
+      insertToDB(arrayNotebook);
     });
-
-    insertToDB(arrayNotebook);
-  });
 }
 
 function cleanName(name) {
@@ -52,7 +50,7 @@ function cleanName(name) {
   notebookName = notebookName.replace(/\sAsk Us For Discount/g, '');
   notebookName = notebookName.replace(/\s-\sNew!!!/g, '');
   notebookName = notebookName.replace(/\s-\sGaransi Distributor/g, '');
-  
+
   return notebookName;
 }
 
@@ -63,7 +61,7 @@ function notebookDetailsParse(details) {
   detail.details = details;
 
   // String rusak
-  if (notebookDetails[0].match(/\//g) && !notebookDetails[0].match(/\/13/g)){
+  if (notebookDetails[0].match(/\//g) && !notebookDetails[0].match(/\/13/g)) {
     const arrData = notebookDetails[0].split('/')
     detail.processor = parsingProcessor(arrData[0]);
     detail.ram = parsingRam(arrData[1]);
@@ -80,7 +78,7 @@ function notebookDetailsParse(details) {
     detail.ssd = details.toLowerCase().match(/ssd/g);
     detail.ssd = details.toLowerCase().match(/ssd/g) ? true : false;
   }
-  
+
   return detail;
 }
 
@@ -88,22 +86,17 @@ function parsingVGA(oldDetails) {
   const details = oldDetails.toLowerCase();
   let vga = new Object();
 
-  // Kalo ada word 'VGA'
-  // if (details.match(/vga/g)) {
-  //   vga = details.split('vga')[1].split(',')[0]
-  // }
-
   // Kalo ada word 'Radeon'
   if (details.match(/radeon/g)) {
     vga.brand = 'amd'
     // R5, R6, R7, R8, 
-    if (details.match(/r5/g)){
+    if (details.match(/r5/g)) {
       vga.version = 'r5'
-    } else if (details.match(/r6/g)){
+    } else if (details.match(/r6/g)) {
       vga.version = 'r6'
-    } else if (details.match(/r7/g)){
+    } else if (details.match(/r7/g)) {
       vga.version = 'r7'
-    } else if (details.match(/r8/g)){
+    } else if (details.match(/r8/g)) {
       vga.version = 'r8'
     }
   }
@@ -111,11 +104,11 @@ function parsingVGA(oldDetails) {
   else if (details.match(/nvidia/g)) {
     vga.brand = 'nvidia'
     // GT, GTX
-    if (details.match(/gtx/g)){
+    if (details.match(/gtx/g)) {
       vga.version = 'gtx'
-    } else if (details.match(/gt/g)){
+    } else if (details.match(/gt/g)) {
       vga.version = 'gt'
-    } 
+    }
   }
 
   return vga;
@@ -123,19 +116,21 @@ function parsingVGA(oldDetails) {
 
 function parsingProcessor(data) {
   let processor = '';
-  
+
   // PARSING PROCESSOR
   if (data) {
     processor = data.trim();
-    
+
     // Parsing buat intel
     if (processor.match(/intel/gi)) {
       if (processor.match(/i3/gi)) {
         processor = 'i3';
-      } else if (processor.match(/i5/gi)){
+      } else if (processor.match(/i5/gi)) {
         processor = 'i5';
-      } else if (processor.match(/i7/gi)){
+      } else if (processor.match(/i7/gi)) {
         processor = 'i7';
+      } else if (processor.match(/i9/gi)) {
+        processor = 'i9'
       }
     }
 
@@ -150,7 +145,7 @@ function parsingProcessor(data) {
 
 function parsingRam(data) {
   let ram = '';
-  
+
   if (data) {
     ram = data.trim();
 
@@ -190,14 +185,27 @@ function parsingStorage(data) {
 
 function insertToDB(data) {
   const url = `https://api.mlab.com/api/1/databases/notebook-search/collections/notebook?apiKey=${API_KEY}`
-  
-  axios.post(url, JSON.stringify(data))
-  .then(function (response) {
-    console.log(`${response.status} ${response.statusText}`);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+
+  axios
+    .put(url, JSON.stringify([]), {
+      headers: {
+        'Content-type': 'application/json;charset=utf-8'
+      }
+    })
+    .then(function (_) {
+      console.log('Success clean documents')
+      axios
+        .post(url, JSON.stringify(data))
+        .then(function (response) {
+          console.log(`Success insert data. Status ${response.statusText}`);
+        })
+        .catch(function (error) {
+          console.log(`failed to insert data to db. ${error}`);
+        });
+    })
+    .catch(function (error) {
+      console.log(`failed to delete documents. ${error}`)
+    })
 }
 
 function main() {
