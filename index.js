@@ -153,19 +153,19 @@ function parsingRam(data) {
   if (data) {
     ram = data.trim();
 
-    if (ram.match(/2GB/gi)) {
-      ram = '2';
-    } else if (ram.match(/4GB/gi)) {
-      ram = '4';
-    } else if (ram.match(/8GB/gi)) {
-      ram = '8';
-    } else if (ram.match(/16GB/gi)) {
+    if (ram.match(/16GB/gi)) {
       ram = '16';
     } else if (ram.match(/32GB/gi)) {
       ram = '32';
     } else if (ram.match(/64GB/gi)) {
       ram = '64';
-    }
+    } else if (ram.match(/2GB/gi)) {
+      ram = '2';
+    } else if (ram.match(/4GB/gi)) {
+      ram = '4';
+    } else if (ram.match(/8GB/gi)) {
+      ram = '8';
+    } 
   }
 
   return ram;
