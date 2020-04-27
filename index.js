@@ -157,6 +157,10 @@ function parsingRam(data) {
       ram = '8';
     } else if (ram.match(/16GB/gi)) {
       ram = '16';
+    } else if (ram.match(/32GB/gi)) {
+      ram = '32';
+    } else if (ram.match(/64GB/gi)) {
+      ram = '64';
     }
   }
 
