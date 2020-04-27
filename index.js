@@ -98,6 +98,8 @@ function parsingVGA(oldDetails) {
       vga.version = 'r7'
     } else if (details.match(/r8/g)) {
       vga.version = 'r8'
+    } else if (details.match(/pro/g)) {
+      vga.version = 'pro'
     }
   }
   // Kalo ada word 'Nvidia'
@@ -108,6 +110,8 @@ function parsingVGA(oldDetails) {
       vga.version = 'gtx'
     } else if (details.match(/gt/g)) {
       vga.version = 'gt'
+    } else if (details.match(/rtx/g)) {
+      vga.version = 'rtx'
     }
   }
 
