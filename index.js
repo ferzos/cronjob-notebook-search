@@ -207,7 +207,7 @@ function insertToDB(data) {
       axios
         .post(url, JSON.stringify(data))
         .then(function (response) {
-          console.log(`Success insert data. Status ${response.statusText}`);
+          console.log(`Success insert ${data.length} notebook data.\nHTTP Code: ${response.statusText}`);
         })
         .catch(function (error) {
           console.log(`failed to insert data to db. ${error}`);
